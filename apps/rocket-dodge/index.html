@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ロケット・ドッジ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-wrap">
+    <header class="hud">
+      <h1>🚀 ロケット・ドッジ</h1>
+      <div class="stats">
+        <span>スコア: <strong id="score">0</strong></span>
+        <span>ハイスコア: <strong id="highScore">0</strong></span>
+      </div>
+    </header>
+
+    <section class="game-area">
+      <canvas id="game" width="420" height="700" aria-label="ゲーム画面"></canvas>
+      <div id="overlay" class="overlay show">
+        <h2 id="overlayTitle">スタート準備OK？</h2>
+        <p id="overlayText">矢印キー / WASD / 画面ボタンで操作。隕石を避けて星を集めよう！</p>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="buttons-row">
+        <button id="startBtn">スタート / リスタート</button>
+        <button id="pauseBtn">一時停止</button>
+        <button id="soundBtn">🔊 サウンド ON</button>
+      </div>
+      <div class="touch-pad" aria-label="モバイル操作">
+        <button class="touch-btn" data-dir="up">▲</button>
+        <div class="mid-row">
+          <button class="touch-btn" data-dir="left">◀</button>
+          <button class="touch-btn" data-dir="down">▼</button>
+          <button class="touch-btn" data-dir="right">▶</button>
+        </div>
+      </div>
+      <p class="hint">Tip: 星は +10、時間が経つほど難しくなる！</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

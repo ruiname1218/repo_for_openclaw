@@ -1,0 +1,117 @@
+:root {
+  --bg1: #080b1b;
+  --bg2: #141b3a;
+  --accent: #5ee7ff;
+  --danger: #ff7a7a;
+  --good: #ffe768;
+  --text: #f4f8ff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top, var(--bg2), var(--bg1) 60%);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.game-wrap {
+  width: min(100vw, 560px);
+  padding: 12px;
+}
+
+.hud h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.game-area {
+  position: relative;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: linear-gradient(#060915, #0f1735 65%, #0a1025);
+  touch-action: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-content: center;
+  text-align: center;
+  background: rgba(6, 9, 21, 0.62);
+  padding: 16px;
+}
+
+.overlay.show { display: grid; }
+
+.overlay h2 { margin: 0 0 6px; }
+.overlay p { margin: 0; line-height: 1.5; }
+
+.controls { margin-top: 10px; }
+.buttons-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #061024;
+  background: var(--accent);
+}
+
+button:active { transform: translateY(1px) scale(0.99); }
+
+#pauseBtn { background: #b4d7ff; }
+#soundBtn { background: #a7ffd9; }
+
+.touch-pad {
+  margin-top: 10px;
+  user-select: none;
+}
+
+.touch-btn {
+  min-width: 62px;
+  min-height: 48px;
+  font-size: 1.2rem;
+  background: rgba(255,255,255,0.88);
+}
+
+.mid-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.hint {
+  font-size: 0.88rem;
+  opacity: 0.85;
+  margin: 10px 2px 0;
+}
+
+@media (min-width: 720px) {
+  .touch-pad { max-width: 280px; }
+}
