@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: linear-gradient(#9ad8ff, #dff5ff);
+  color: #102030;
+}
+.wrap { width: min(1000px, 96vw); margin: 14px auto; }
+h1 { margin: 0 0 8px; }
+.hud { display: flex; gap: 16px; margin-bottom: 8px; font-weight: 700; }
+#msg { color: #b42318; }
+canvas {
+  width: 100%;
+  height: auto;
+  border: 2px solid #234;
+  border-radius: 10px;
+  background: #7ec9ff;
+  image-rendering: pixelated;
+}
