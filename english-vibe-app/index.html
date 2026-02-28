@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Vibe</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar card">
+        <div>
+          <h1>English Vibe</h1>
+          <p class="subtitle">毎日ちょっとずつ英単語を身につけよう</p>
+        </div>
+        <button id="themeToggle" class="ghost" aria-label="ダークモード切り替え">🌙</button>
+      </header>
+
+      <section class="stats card">
+        <h2>学習ステータス</h2>
+        <div class="stats-grid">
+          <div><span>正解数</span><strong id="correctCount">0</strong></div>
+          <div><span>回答数</span><strong id="answeredCount">0</strong></div>
+          <div><span>正答率</span><strong id="accuracy">0%</strong></div>
+          <div><span>連続日数</span><strong id="streak">0日</strong></div>
+        </div>
+      </section>
+
+      <nav class="tabs card" aria-label="モード選択">
+        <button class="tab active" data-mode="flashcard">フラッシュカード</button>
+        <button class="tab" data-mode="quiz">4択クイズ</button>
+      </nav>
+
+      <main>
+        <section id="flashcardMode" class="mode card">
+          <h2>フラッシュカード</h2>
+          <div class="flashcard" id="flashcard">
+            <p class="hint">タップして意味を表示</p>
+            <h3 id="cardWord">word</h3>
+            <p id="cardMeaning" class="hidden"></p>
+            <p id="cardExample" class="example hidden"></p>
+          </div>
+          <div class="row">
+            <button id="toggleAnswerBtn">意味を見る</button>
+            <button id="nextCardBtn" class="ghost">次の単語</button>
+          </div>
+        </section>
+
+        <section id="quizMode" class="mode card hidden">
+          <h2>4択クイズ</h2>
+          <p id="quizWord" class="quiz-word">word</p>
+          <div id="quizChoices" class="choices"></div>
+          <p id="quizFeedback" class="feedback"></p>
+          <button id="nextQuizBtn" class="ghost hidden">次の問題へ</button>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
