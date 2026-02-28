@@ -3,58 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>English Vibe</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>お絵描きアプリ</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app">
-      <header class="topbar card">
-        <div>
-          <h1>English Vibe</h1>
-          <p class="subtitle">毎日ちょっとずつ英単語を身につけよう</p>
-        </div>
-        <button id="themeToggle" class="ghost" aria-label="ダークモード切り替え">🌙</button>
-      </header>
+    <main class="app">
+      <h1>🎨 お絵描きアプリ</h1>
 
-      <section class="stats card">
-        <h2>学習ステータス</h2>
-        <div class="stats-grid">
-          <div><span>正解数</span><strong id="correctCount">0</strong></div>
-          <div><span>回答数</span><strong id="answeredCount">0</strong></div>
-          <div><span>正答率</span><strong id="accuracy">0%</strong></div>
-          <div><span>連続日数</span><strong id="streak">0日</strong></div>
-        </div>
+      <section class="toolbar" aria-label="描画ツール">
+        <label>
+          色
+          <input type="color" id="colorPicker" value="#111111" />
+        </label>
+
+        <label>
+          太さ
+          <input type="range" id="brushSize" min="1" max="40" value="6" />
+          <span id="brushSizeValue">6px</span>
+        </label>
+
+        <button id="eraserBtn" type="button" aria-pressed="false">消しゴム OFF</button>
+        <button id="undoBtn" type="button">元に戻す</button>
+        <button id="redoBtn" type="button">やり直し</button>
+        <button id="clearBtn" type="button" class="danger">全消し</button>
+        <button id="downloadBtn" type="button">PNG保存</button>
       </section>
 
-      <nav class="tabs card" aria-label="モード選択">
-        <button class="tab active" data-mode="flashcard">フラッシュカード</button>
-        <button class="tab" data-mode="quiz">4択クイズ</button>
-      </nav>
+      <section class="canvas-wrap">
+        <canvas id="drawingCanvas" aria-label="お絵描きキャンバス"></canvas>
+      </section>
 
-      <main>
-        <section id="flashcardMode" class="mode card">
-          <h2>フラッシュカード</h2>
-          <div class="flashcard" id="flashcard">
-            <p class="hint">タップして意味を表示</p>
-            <h3 id="cardWord">word</h3>
-            <p id="cardMeaning" class="hidden"></p>
-            <p id="cardExample" class="example hidden"></p>
-          </div>
-          <div class="row">
-            <button id="toggleAnswerBtn">意味を見る</button>
-            <button id="nextCardBtn" class="ghost">次の単語</button>
-          </div>
-        </section>
-
-        <section id="quizMode" class="mode card hidden">
-          <h2>4択クイズ</h2>
-          <p id="quizWord" class="quiz-word">word</p>
-          <div id="quizChoices" class="choices"></div>
-          <p id="quizFeedback" class="feedback"></p>
-          <button id="nextQuizBtn" class="ghost hidden">次の問題へ</button>
-        </section>
-      </main>
-    </div>
+      <p class="hint">マウス・タッチ両対応 / Undo・Redoは最大20ステップ</p>
+    </main>
 
     <script src="app.js"></script>
   </body>

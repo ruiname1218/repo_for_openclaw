@@ -1,237 +1,187 @@
-const WORDS = [
-  { word: "apple", meaning: "りんご", example: "I eat an apple every morning." },
-  { word: "book", meaning: "本", example: "This book is easy to read." },
-  { word: "water", meaning: "水", example: "Please drink more water." },
-  { word: "friend", meaning: "友だち", example: "My friend lives in Tokyo." },
-  { word: "school", meaning: "学校", example: "She goes to school by bus." },
-  { word: "family", meaning: "家族", example: "My family likes sushi." },
-  { word: "house", meaning: "家", example: "Their house is very clean." },
-  { word: "music", meaning: "音楽", example: "I listen to music at night." },
-  { word: "food", meaning: "食べ物", example: "Japanese food is delicious." },
-  { word: "happy", meaning: "うれしい", example: "I am happy today." },
-  { word: "morning", meaning: "朝", example: "I jog in the morning." },
-  { word: "night", meaning: "夜", example: "It is quiet at night." },
-  { word: "work", meaning: "仕事", example: "He starts work at nine." },
-  { word: "study", meaning: "勉強する", example: "We study English together." },
-  { word: "travel", meaning: "旅行する", example: "I want to travel abroad." },
-  { word: "time", meaning: "時間", example: "Do you have time now?" },
-  { word: "money", meaning: "お金", example: "I save money every month." },
-  { word: "weather", meaning: "天気", example: "The weather is sunny." },
-  { word: "beautiful", meaning: "美しい", example: "That beach is beautiful." },
-  { word: "small", meaning: "小さい", example: "I have a small bag." },
-  { word: "big", meaning: "大きい", example: "This city is big." },
-  { word: "fast", meaning: "速い", example: "This train is very fast." },
-  { word: "slow", meaning: "遅い", example: "Please speak slowly." },
-  { word: "open", meaning: "開ける", example: "Open the window, please." },
-  { word: "close", meaning: "閉める", example: "Close the door gently." },
-  { word: "question", meaning: "質問", example: "I have a question." },
-  { word: "answer", meaning: "答え", example: "Your answer is correct." },
-  { word: "learn", meaning: "学ぶ", example: "Children learn quickly." },
-  { word: "speak", meaning: "話す", example: "Can you speak English?" },
-  { word: "listen", meaning: "聞く", example: "Listen to your teacher." },
-];
+const canvas = document.getElementById("drawingCanvas");
+const ctx = canvas.getContext("2d");
 
-const STORAGE_KEYS = {
-  progress: "englishVibeProgress",
-  streak: "englishVibeStreak",
-  theme: "englishVibeTheme",
-};
+const colorPicker = document.getElementById("colorPicker");
+const brushSize = document.getElementById("brushSize");
+const brushSizeValue = document.getElementById("brushSizeValue");
+const eraserBtn = document.getElementById("eraserBtn");
+const undoBtn = document.getElementById("undoBtn");
+const redoBtn = document.getElementById("redoBtn");
+const clearBtn = document.getElementById("clearBtn");
+const downloadBtn = document.getElementById("downloadBtn");
 
-const defaultProgress = { correct: 0, answered: 0 };
+const MAX_HISTORY = 20;
+let drawing = false;
+let isEraser = false;
+let lastX = 0;
+let lastY = 0;
 
-let progress = loadJSON(STORAGE_KEYS.progress, defaultProgress);
-let streak = loadJSON(STORAGE_KEYS.streak, { count: 0, lastDate: null });
-let currentCard = null;
-let currentQuiz = null;
+const undoStack = [];
+const redoStack = [];
 
-const el = {
-  correctCount: document.getElementById("correctCount"),
-  answeredCount: document.getElementById("answeredCount"),
-  accuracy: document.getElementById("accuracy"),
-  streak: document.getElementById("streak"),
-  cardWord: document.getElementById("cardWord"),
-  cardMeaning: document.getElementById("cardMeaning"),
-  cardExample: document.getElementById("cardExample"),
-  toggleAnswerBtn: document.getElementById("toggleAnswerBtn"),
-  nextCardBtn: document.getElementById("nextCardBtn"),
-  flashcard: document.getElementById("flashcard"),
-  tabs: document.querySelectorAll(".tab"),
-  flashcardMode: document.getElementById("flashcardMode"),
-  quizMode: document.getElementById("quizMode"),
-  quizWord: document.getElementById("quizWord"),
-  quizChoices: document.getElementById("quizChoices"),
-  quizFeedback: document.getElementById("quizFeedback"),
-  nextQuizBtn: document.getElementById("nextQuizBtn"),
-  themeToggle: document.getElementById("themeToggle"),
-};
+function resizeCanvas() {
+  const ratio = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
 
-function loadJSON(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
+  const prevImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const prevWidth = canvas.width;
+  const prevHeight = canvas.height;
+
+  canvas.width = Math.floor(rect.width * ratio);
+  canvas.height = Math.floor(rect.height * ratio);
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(ratio, ratio);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, rect.width, rect.height);
+
+  if (prevWidth > 0 && prevHeight > 0) {
+    const temp = document.createElement("canvas");
+    temp.width = prevWidth;
+    temp.height = prevHeight;
+    temp.getContext("2d").putImageData(prevImage, 0, 0);
+    ctx.drawImage(temp, 0, 0, rect.width, rect.height);
   }
 }
 
-function saveJSON(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
+function getPoint(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x: clientX - rect.left, y: clientY - rect.top };
 }
 
-function localDateString() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+function applyBrushStyle() {
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.lineWidth = Number(brushSize.value);
+  ctx.strokeStyle = isEraser ? "#ffffff" : colorPicker.value;
 }
 
-function yesterdayString(dateString) {
-  const date = new Date(`${dateString}T00:00:00`);
-  date.setDate(date.getDate() - 1);
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+function pushHistory() {
+  if (undoStack.length >= MAX_HISTORY) undoStack.shift();
+  undoStack.push(canvas.toDataURL("image/png"));
+  redoStack.length = 0;
+  updateButtons();
 }
 
-function updateStreakOnAnswer() {
-  const today = localDateString();
-  if (streak.lastDate === today) return;
-  if (!streak.lastDate) {
-    streak.count = 1;
-  } else if (streak.lastDate === yesterdayString(today)) {
-    streak.count += 1;
-  } else {
-    streak.count = 1;
-  }
-  streak.lastDate = today;
-  saveJSON(STORAGE_KEYS.streak, streak);
+function restoreFromDataUrl(dataUrl) {
+  const img = new Image();
+  img.onload = () => {
+    const rect = canvas.getBoundingClientRect();
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, rect.width, rect.height);
+    ctx.drawImage(img, 0, 0, rect.width, rect.height);
+  };
+  img.src = dataUrl;
 }
 
-function updateStats() {
-  const accuracy = progress.answered ? Math.round((progress.correct / progress.answered) * 100) : 0;
-  el.correctCount.textContent = progress.correct;
-  el.answeredCount.textContent = progress.answered;
-  el.accuracy.textContent = `${accuracy}%`;
-  el.streak.textContent = `${streak.count || 0}日`;
+function updateButtons() {
+  undoBtn.disabled = undoStack.length <= 1;
+  redoBtn.disabled = redoStack.length === 0;
 }
 
-function getRandomWord(excludeWord = null) {
-  const pool = excludeWord ? WORDS.filter((w) => w.word !== excludeWord) : WORDS;
-  return pool[Math.floor(Math.random() * pool.length)];
+function startDraw(e) {
+  e.preventDefault();
+  const p = getPoint(e);
+  drawing = true;
+  lastX = p.x;
+  lastY = p.y;
+  applyBrushStyle();
 }
 
-function renderCard() {
-  currentCard = getRandomWord();
-  el.cardWord.textContent = currentCard.word;
-  el.cardMeaning.textContent = `意味: ${currentCard.meaning}`;
-  el.cardExample.textContent = `例文: ${currentCard.example}`;
-  hideCardAnswer();
+function draw(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  const p = getPoint(e);
+
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+
+  lastX = p.x;
+  lastY = p.y;
 }
 
-function showCardAnswer() {
-  el.cardMeaning.classList.remove("hidden");
-  el.cardExample.classList.remove("hidden");
-  el.toggleAnswerBtn.textContent = "隠す";
+function stopDraw(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  drawing = false;
+  pushHistory();
 }
 
-function hideCardAnswer() {
-  el.cardMeaning.classList.add("hidden");
-  el.cardExample.classList.add("hidden");
-  el.toggleAnswerBtn.textContent = "意味を見る";
-}
-
-function toggleCardAnswer() {
-  const hidden = el.cardMeaning.classList.contains("hidden");
-  hidden ? showCardAnswer() : hideCardAnswer();
-}
-
-function setupQuiz() {
-  currentQuiz = getRandomWord();
-  const choices = [currentQuiz];
-  while (choices.length < 4) {
-    const candidate = getRandomWord(currentQuiz.word);
-    if (!choices.find((c) => c.word === candidate.word)) choices.push(candidate);
-  }
-
-  shuffle(choices);
-  el.quizWord.textContent = currentQuiz.word;
-  el.quizChoices.innerHTML = "";
-  el.quizFeedback.textContent = "";
-  el.nextQuizBtn.classList.add("hidden");
-
-  choices.forEach((choice) => {
-    const btn = document.createElement("button");
-    btn.className = "choice";
-    btn.textContent = choice.meaning;
-    btn.addEventListener("click", () => answerQuiz(choice, btn));
-    el.quizChoices.appendChild(btn);
-  });
-}
-
-function answerQuiz(choice, button) {
-  const buttons = [...el.quizChoices.querySelectorAll("button")];
-  buttons.forEach((b) => (b.disabled = true));
-
-  const isCorrect = choice.word === currentQuiz.word;
-  progress.answered += 1;
-  if (isCorrect) {
-    progress.correct += 1;
-    button.classList.add("correct");
-    el.quizFeedback.textContent = "正解！🎉";
-  } else {
-    button.classList.add("wrong");
-    const correctBtn = buttons.find((b) => b.textContent === currentQuiz.meaning);
-    if (correctBtn) correctBtn.classList.add("correct");
-    el.quizFeedback.textContent = `不正解。正解は「${currentQuiz.meaning}」`;
-  }
-
-  updateStreakOnAnswer();
-  saveJSON(STORAGE_KEYS.progress, progress);
-  updateStats();
-  el.nextQuizBtn.classList.remove("hidden");
-}
-
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-
-function switchMode(mode) {
-  const isFlash = mode === "flashcard";
-  el.flashcardMode.classList.toggle("hidden", !isFlash);
-  el.quizMode.classList.toggle("hidden", isFlash);
-  el.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode));
-  if (!isFlash) setupQuiz();
-}
-
-function applyTheme(theme) {
-  const dark = theme === "dark";
-  document.documentElement.classList.toggle("dark", dark);
-  el.themeToggle.textContent = dark ? "☀️" : "🌙";
-}
-
-function initTheme() {
-  const saved = localStorage.getItem(STORAGE_KEYS.theme);
-  const preferredDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const theme = saved || (preferredDark ? "dark" : "light");
-  applyTheme(theme);
-}
-
-el.toggleAnswerBtn.addEventListener("click", toggleCardAnswer);
-el.nextCardBtn.addEventListener("click", renderCard);
-el.flashcard.addEventListener("click", toggleCardAnswer);
-el.tabs.forEach((tab) => tab.addEventListener("click", () => switchMode(tab.dataset.mode)));
-el.nextQuizBtn.addEventListener("click", setupQuiz);
-el.themeToggle.addEventListener("click", () => {
-  const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
-  applyTheme(next);
-  localStorage.setItem(STORAGE_KEYS.theme, next);
+brushSize.addEventListener("input", () => {
+  brushSizeValue.textContent = `${brushSize.value}px`;
 });
 
-updateStats();
-initTheme();
-renderCard();
+colorPicker.addEventListener("input", () => {
+  if (isEraser) {
+    isEraser = false;
+    eraserBtn.setAttribute("aria-pressed", "false");
+    eraserBtn.textContent = "消しゴム OFF";
+  }
+});
+
+eraserBtn.addEventListener("click", () => {
+  isEraser = !isEraser;
+  eraserBtn.setAttribute("aria-pressed", String(isEraser));
+  eraserBtn.textContent = isEraser ? "消しゴム ON" : "消しゴム OFF";
+});
+
+undoBtn.addEventListener("click", () => {
+  if (undoStack.length <= 1) return;
+  const current = undoStack.pop();
+  redoStack.push(current);
+  restoreFromDataUrl(undoStack[undoStack.length - 1]);
+  updateButtons();
+});
+
+redoBtn.addEventListener("click", () => {
+  if (redoStack.length === 0) return;
+  const next = redoStack.pop();
+  undoStack.push(next);
+  restoreFromDataUrl(next);
+  updateButtons();
+});
+
+clearBtn.addEventListener("click", () => {
+  if (!confirm("キャンバスを全消ししますか？")) return;
+  const rect = canvas.getBoundingClientRect();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, rect.width, rect.height);
+  pushHistory();
+});
+
+downloadBtn.addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.download = `drawing-${Date.now()}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+});
+
+["mousedown", "mousemove", "mouseup", "mouseleave"].forEach((event) => {
+  canvas.addEventListener(event, (e) => {
+    if (event === "mousedown") startDraw(e);
+    if (event === "mousemove") draw(e);
+    if (event === "mouseup" || event === "mouseleave") stopDraw(e);
+  });
+});
+
+["touchstart", "touchmove", "touchend", "touchcancel"].forEach((event) => {
+  canvas.addEventListener(
+    event,
+    (e) => {
+      if (event === "touchstart") startDraw(e);
+      if (event === "touchmove") draw(e);
+      if (event === "touchend" || event === "touchcancel") stopDraw(e);
+    },
+    { passive: false }
+  );
+});
+
+window.addEventListener("resize", resizeCanvas);
+
+resizeCanvas();
+pushHistory();
