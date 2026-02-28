@@ -11,7 +11,7 @@ function runOpenClaw(message) {
   return new Promise((resolve, reject) => {
     execFile(
       "openclaw",
-      ["agent", "--message", message],
+      ["agent", "--agent", "main", "--message", message],
       {
         timeout: 90_000,
         maxBuffer: 1024 * 1024,
