@@ -22,7 +22,14 @@ Track each vibe-app deployment so older versions stay reachable.
 
 - Date (JST): 2026-03-01 00:15
 - App name: Independent deployment structure enabled
-- Commit: pending
+- Commit: 7a501d4
 - Production URL: (project default domain)
 - Deployment URL: (capture after next deploy)
 - Notes: Migrated to apps/<app-name> layout and added deploy automation scripts.
+
+- Date (JST): 2026-03-01 00:33
+- App name: todo-app
+- Commit: c3e2c78
+- Production URL: (todo-app project default domain)
+- Deployment URL: https://todo-app-03010033-3bg56mlow-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via Vercel API.

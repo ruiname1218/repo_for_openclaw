@@ -11,8 +11,8 @@
       "repo": "ruiname1218/repo_for_openclaw",
       "branch": "master",
       "rootDirectory": "apps/todo-app",
-      "vercelProjectId": "",
-      "notes": "Create Vercel project and fill project id"
+      "vercelProjectId": "prj_4p1LsVqqBxuNkKHJoTFp3cAeYgWa",
+      "notes": "Independent Vercel project created via API; root=apps/todo-app"
     }
   }
 }
