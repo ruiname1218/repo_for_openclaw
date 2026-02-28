@@ -18,8 +18,8 @@
       "repo": "ruiname1218/repo_for_openclaw",
       "branch": "master",
       "rootDirectory": "apps/kakeibo-app",
-      "vercelProjectId": "",
-      "notes": "Pending independent Vercel project creation"
+      "vercelProjectId": "prj_Q0VfasqjHrGfrDpjrZheqEP3fb59",
+      "notes": "Independent Vercel project created via API; root=apps/kakeibo-app"
     }
   }
 }

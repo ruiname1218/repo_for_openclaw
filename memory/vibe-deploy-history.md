@@ -33,3 +33,10 @@ Track each vibe-app deployment so older versions stay reachable.
 - Production URL: (todo-app project default domain)
 - Deployment URL: https://todo-app-03010033-3bg56mlow-rui-suzukis-projects.vercel.app
 - Notes: Independent project created and deployed via Vercel API.
+
+- Date (JST): 2026-03-01 00:44
+- App name: kakeibo-app
+- Commit: bc93265
+- Production URL: (kakeibo-app project default domain)
+- Deployment URL: https://kakeibo-app-03010043-duh1rz1wl-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via Vercel API.
