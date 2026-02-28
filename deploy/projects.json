@@ -5,7 +5,8 @@
       "branch": "master",
       "rootDirectory": "apps/vibe-app",
       "vercelProjectId": "prj_LCyTPl4AmYUtPFROqO6xtKS7FAIj",
-      "notes": "Primary app migrated from old vibe-app root folder."
+      "notes": "Primary app migrated from old vibe-app root folder.",
+      "latestDeploymentUrl": "https://repo-for-openclaw-6oyl447gy-rui-suzukis-projects.vercel.app"
     },
     "todo-app": {
       "repo": "ruiname1218/repo_for_openclaw",

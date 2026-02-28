@@ -61,3 +61,9 @@ Track each vibe-app deployment so older versions stay reachable.
 - Production URL: (project default domain)
 - Deployment URL: https://rocket-dodge-03010404-nzrx7sj6j-rui-suzukis-projects.vercel.app
 - Notes: Independent project created and deployed via API (state: READY).
+
+- Date (JST): 2026-03-01 05:10
+- App name: vibe-app
+- Commit: 7857d64
+- Deployment URL: https://repo-for-openclaw-6oyl447gy-rui-suzukis-projects.vercel.app
+- Notes: Replaced apps/vibe-app with the first drawing app build and deployed to production.
