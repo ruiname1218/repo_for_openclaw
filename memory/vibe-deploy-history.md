@@ -40,3 +40,10 @@ Track each vibe-app deployment so older versions stay reachable.
 - Production URL: (kakeibo-app project default domain)
 - Deployment URL: https://kakeibo-app-03010043-duh1rz1wl-rui-suzukis-projects.vercel.app
 - Notes: Independent project created and deployed via Vercel API.
+
+- Date (JST): 2026-03-01 01:23
+- App name: weather-forecast-app
+- Commit: 1e13491
+- Production URL: (project default domain)
+- Deployment URL: https://weather-forecast-app-03010123-7g89hflte-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via API (state: READY).
