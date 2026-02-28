@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>Todo</h1>
+    <form id="todo-form" class="todo-form">
+      <input id="todo-input" type="text" placeholder="やることを入力" maxlength="120" required />
+      <button type="submit">追加</button>
+    </form>
+
+    <section class="toolbar">
+      <button data-filter="all" class="active">すべて</button>
+      <button data-filter="active">未完了</button>
+      <button data-filter="done">完了</button>
+      <button id="clear-done" class="danger">完了を削除</button>
+    </section>
+
+    <ul id="todo-list" class="todo-list"></ul>
+    <p id="meta" class="meta"></p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

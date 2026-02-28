@@ -6,6 +6,13 @@
       "rootDirectory": "apps/vibe-app",
       "vercelProjectId": "prj_LCyTPl4AmYUtPFROqO6xtKS7FAIj",
       "notes": "Primary app migrated from old vibe-app root folder."
+    },
+    "todo-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/todo-app",
+      "vercelProjectId": "",
+      "notes": "Create Vercel project and fill project id"
     }
   }
 }
