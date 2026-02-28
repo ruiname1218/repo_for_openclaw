@@ -67,3 +67,10 @@ Track each vibe-app deployment so older versions stay reachable.
 - Commit: 7857d64
 - Deployment URL: https://repo-for-openclaw-6oyl447gy-rui-suzukis-projects.vercel.app
 - Notes: Replaced apps/vibe-app with the first drawing app build and deployed to production.
+
+- Date (JST): 2026-03-01 05:17
+- App name: mario-like-game
+- Commit: 9a166a7
+- Production URL: (project default domain)
+- Deployment URL: https://mario-like-game-03010516-fjaavdyzb-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via API (state: READY).

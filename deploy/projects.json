@@ -45,6 +45,14 @@
       "vercelProjectId": "prj_S1djGcTVKv25vEAOgeqYoe64pGa1",
       "latestDeploymentUrl": "https://rocket-dodge-03010404-nzrx7sj6j-rui-suzukis-projects.vercel.app",
       "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
+    },
+    "mario-like-game": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/mario-like-game",
+      "vercelProjectId": "prj_AEqYyBBZZxds2XEHD7lMg2ICDAej",
+      "latestDeploymentUrl": "https://mario-like-game-03010516-fjaavdyzb-rui-suzukis-projects.vercel.app",
+      "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
     }
   }
 }
