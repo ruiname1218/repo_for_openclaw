@@ -28,6 +28,22 @@
       "vercelProjectId": "prj_1MEyEAbfCwQRAWw2e8k4YwQep1FA",
       "latestDeploymentUrl": "https://weather-forecast-app-03010123-7g89hflte-rui-suzukis-projects.vercel.app",
       "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
+    },
+    "calculator-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/calculator-app",
+      "vercelProjectId": "prj_7fcf7mmdfRJCSwxK6Z4aYFzfgVa7",
+      "latestDeploymentUrl": "https://calculator-app-03010202-d0gn5zya2-rui-suzukis-projects.vercel.app",
+      "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
+    },
+    "rocket-dodge": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/rocket-dodge",
+      "vercelProjectId": "prj_S1djGcTVKv25vEAOgeqYoe64pGa1",
+      "latestDeploymentUrl": "https://rocket-dodge-03010404-nzrx7sj6j-rui-suzukis-projects.vercel.app",
+      "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
     }
   }
 }

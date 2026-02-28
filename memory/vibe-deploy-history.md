@@ -47,3 +47,17 @@ Track each vibe-app deployment so older versions stay reachable.
 - Production URL: (project default domain)
 - Deployment URL: https://weather-forecast-app-03010123-7g89hflte-rui-suzukis-projects.vercel.app
 - Notes: Independent project created and deployed via API (state: READY).
+
+- Date (JST): 2026-03-01 02:02
+- App name: calculator-app
+- Commit: aee8f70
+- Production URL: (project default domain)
+- Deployment URL: https://calculator-app-03010202-d0gn5zya2-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via API (state: READY).
+
+- Date (JST): 2026-03-01 04:05
+- App name: rocket-dodge
+- Commit: d98f263
+- Production URL: (project default domain)
+- Deployment URL: https://rocket-dodge-03010404-nzrx7sj6j-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via API (state: READY).
