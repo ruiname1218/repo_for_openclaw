@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>天気予報アプリ</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <div>
+          <h1>天気予報</h1>
+          <p class="subtitle">Open-Meteo を使ったシンプルな天気アプリ</p>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="ダークモード切替">🌙</button>
+      </header>
+
+      <section class="search-card card">
+        <form id="searchForm" class="search-form">
+          <label for="cityInput">都市名で検索</label>
+          <div class="search-row">
+            <input id="cityInput" type="text" placeholder="例: 東京 / Osaka / Kyoto" autocomplete="off" />
+            <button type="submit" id="searchButton">検索</button>
+          </div>
+        </form>
+        <div class="quick-buttons">
+          <button class="chip" data-city="東京">東京</button>
+          <button class="chip" data-city="大阪">大阪</button>
+          <button class="chip" data-city="京都">京都</button>
+        </div>
+        <div class="recent-wrap">
+          <p class="section-title">最近の検索</p>
+          <div id="recentList" class="recent-list"></div>
+        </div>
+      </section>
+
+      <section id="statusArea" class="status" aria-live="polite"></section>
+
+      <section id="weatherArea" class="weather-area hidden">
+        <article class="current card" id="currentWeather"></article>
+
+        <div class="forecast-grid">
+          <article class="card" id="todayForecast"></article>
+          <article class="card" id="tomorrowForecast"></article>
+        </div>
+
+        <article class="card" id="hourlyForecast"></article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
