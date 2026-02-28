@@ -13,6 +13,13 @@
       "rootDirectory": "apps/todo-app",
       "vercelProjectId": "prj_4p1LsVqqBxuNkKHJoTFp3cAeYgWa",
       "notes": "Independent Vercel project created via API; root=apps/todo-app"
+    },
+    "kakeibo-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/kakeibo-app",
+      "vercelProjectId": "",
+      "notes": "Pending independent Vercel project creation"
     }
   }
 }

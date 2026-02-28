@@ -1,5 +1,6 @@
 ios-openclaw-api/
 .openclaw/
+.vercel.env
 AGENTS.md
 BOOTSTRAP.md
 HEARTBEAT.md
