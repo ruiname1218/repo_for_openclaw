@@ -1,47 +1,60 @@
 ---
 name: vibe-deploy-ops
-description: Run independent multi-app Vercel deployments from one repo using `apps/<app-name>` roots, with one Vercel project per app. Use when creating a new vibe-coded app, shipping updates, and logging deployment-history URLs so old versions remain accessible.
+description: Run fully automated independent Vercel deployments from one repo using `apps/<app-name>`, with one Vercel project per app and one URL per app. Use when creating/shipping vibe-coded web apps and when listing existing app URLs.
 ---
 
 # Vibe Deploy Ops
 
 ## Overview
 
-Use this skill to maintain independent app deployments. Each app lives in `apps/<app-name>` and maps to its own Vercel project. Pushes to `master` trigger auto-deploy per project/root mapping.
+Use this skill to keep every app independent:
+- source lives in `apps/<app-name>`
+- each app has its own Vercel project
+- each app keeps its own URL
 
-## Standard workflow
+Never use overwrite-only single-project deployment as the default workflow.
 
-1. Create or update app in `apps/<app-name>`.
-2. Ensure app mapping exists in `deploy/projects.json` (`rootDirectory`, `vercelProjectId`).
-3. Commit and push:
-   - `git add -A`
-   - `git commit -m "<app-name>: <short change>"`
-   - `git push origin master`
-4. Fetch latest deployment URL:
-   - `VERCEL_TOKEN=... ./scripts/vercel_fetch_latest.sh <project_id> [team_id]`
-5. Log deployment entry:
-   - `VERCEL_TOKEN=... ./scripts/log_deploy.sh <app-name> <project_id> [team_id]`
+## Automation contract
 
-## New app workflow
+When the user asks to create an app, do all of this by default:
+1. Build app in `apps/<app-name>`.
+2. Commit and push to `master`.
+3. Create independent Vercel project by API.
+4. Set project `rootDirectory` to `apps/<app-name>`.
+5. Trigger deployment and wait for result.
+6. Record project id + URL in `deploy/projects.json` and `memory/vibe-deploy-history.md`.
+7. Reply with the final app URL.
 
-1. Scaffold from baseline:
-   - `./scripts/new_app_scaffold.sh <new-app-name>`
-2. Create/import a new Vercel project for `apps/<new-app-name>` root.
-3. Add mapping in `deploy/projects.json`.
-4. Push to `master`.
-5. Log deployment URL.
+## Commands
+
+### Create independent project + deploy
+
+```bash
+source .vercel.env
+./scripts/create_independent_vercel_project.sh <app-name>
+```
+
+### List all apps with URLs
+
+```bash
+# with live state/url from Vercel API
+source .vercel.env
+./scripts/list_deployed_apps.sh
+
+# offline (cached urls from deploy/projects.json)
+./scripts/list_deployed_apps.sh
+```
+
+### Scaffold a new app from baseline
+
+```bash
+./scripts/new_app_scaffold.sh <new-app-name>
+```
 
 ## Required conventions
 
-- Repo keeps deployable web apps under `apps/`.
-- One app = one Vercel project (independent URL/lifecycle).
-- Production branch is `master`.
-- Always preserve deployment-history URLs in `memory/vibe-deploy-history.md`.
-
-## Quick checklist
-
-- app updated under `apps/<app-name>`
-- mapping present in `deploy/projects.json`
-- push completed
-- latest deployment URL captured
-- history entry recorded
+- Keep deployable apps under `apps/` only.
+- One app = one Vercel project = one independent URL.
+- Keep production branch on `master`.
+- Persist deployment URLs in `memory/vibe-deploy-history.md`.
+- Keep `deploy/projects.json` up to date.
