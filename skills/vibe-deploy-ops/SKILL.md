@@ -1,43 +1,47 @@
 ---
 name: vibe-deploy-ops
-description: Maintain a single fast vibe-coding deploy pipeline to Vercel using the `vibe-app` folder in `ruiname1218/repo_for_openclaw`. Use when creating, replacing, or shipping a quick web app, and when logging Vercel deployment URLs so older apps remain accessible.
+description: Run independent multi-app Vercel deployments from one repo using `apps/<app-name>` roots, with one Vercel project per app. Use when creating a new vibe-coded app, shipping updates, and logging deployment-history URLs so old versions remain accessible.
 ---
 
 # Vibe Deploy Ops
 
 ## Overview
 
-Use this skill to ship rapid web app iterations to one Vercel project by replacing `vibe-app`, pushing to `master`, and recording the resulting deployment URL with a human-readable app label.
+Use this skill to maintain independent app deployments. Each app lives in `apps/<app-name>` and maps to its own Vercel project. Pushes to `master` trigger auto-deploy per project/root mapping.
 
-## Workflow
+## Standard workflow
 
-1. Build or replace the app inside `vibe-app/` only.
-2. Keep repo deploy-safe:
-   - Do not commit local-only folders (for example `ios-openclaw-api/`, `.openclaw/`).
-   - Keep deploy content scoped to `vibe-app/`.
+1. Create or update app in `apps/<app-name>`.
+2. Ensure app mapping exists in `deploy/projects.json` (`rootDirectory`, `vercelProjectId`).
 3. Commit and push:
    - `git add -A`
-   - `git commit -m "<app name>: <short change>"`
+   - `git commit -m "<app-name>: <short change>"`
    - `git push origin master`
-4. Confirm Vercel auto-deploy triggered.
-5. Save deployment history entry in `memory/vibe-deploy-history.md` with:
-   - date/time (JST)
-   - app name
-   - commit hash
-   - production URL
-   - deployment URL (history URL)
-   - short notes
+4. Fetch latest deployment URL:
+   - `VERCEL_TOKEN=... ./scripts/vercel_fetch_latest.sh <project_id> [team_id]`
+5. Log deployment entry:
+   - `VERCEL_TOKEN=... ./scripts/log_deploy.sh <app-name> <project_id> [team_id]`
+
+## New app workflow
+
+1. Scaffold from baseline:
+   - `./scripts/new_app_scaffold.sh <new-app-name>`
+2. Create/import a new Vercel project for `apps/<new-app-name>` root.
+3. Add mapping in `deploy/projects.json`.
+4. Push to `master`.
+5. Log deployment URL.
 
 ## Required conventions
 
-- Deploy folder name is always `vibe-app`.
+- Repo keeps deployable web apps under `apps/`.
+- One app = one Vercel project (independent URL/lifecycle).
 - Production branch is `master`.
-- Preserve old app access by storing Vercel deployment-history URLs each time.
-- If Vercel root directory drifts, set it back to `vibe-app`.
+- Always preserve deployment-history URLs in `memory/vibe-deploy-history.md`.
 
 ## Quick checklist
 
-- `vibe-app` updated
-- commit pushed
-- Vercel deployment green
-- history URL recorded in `memory/vibe-deploy-history.md`
+- app updated under `apps/<app-name>`
+- mapping present in `deploy/projects.json`
+- push completed
+- latest deployment URL captured
+- history entry recorded
