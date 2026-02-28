@@ -1,0 +1,140 @@
+:root {
+  --bg: #fff7ef;
+  --card: #ffffff;
+  --text: #2f2a25;
+  --muted: #756a61;
+  --primary: #ff7f50;
+  --primary-2: #ff996b;
+  --ok: #1f9d55;
+  --bad: #d64545;
+  --border: #f0dfd1;
+}
+
+body.dark {
+  --bg: #17151f;
+  --card: #242233;
+  --text: #f3f1ff;
+  --muted: #beb6d9;
+  --primary: #9c7dff;
+  --primary-2: #b49dff;
+  --ok: #48d597;
+  --bad: #ff7a91;
+  --border: #3b3652;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  background: linear-gradient(160deg, var(--bg), #ffe7d4);
+  color: var(--text);
+}
+
+body.dark {
+  background: linear-gradient(160deg, #17151f, #0f0d16);
+}
+
+.app {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+}
+
+.header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h1 { font-size: 1.2rem; margin: 0; }
+h2 { margin: 0 0 12px; }
+
+.field { margin-bottom: 10px; }
+label { display: block; margin-bottom: 6px; font-weight: bold; }
+select, input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  background: #fff;
+}
+body.dark select, body.dark input {
+  background: #322d45;
+  color: var(--text);
+}
+
+.primary-btn, .ghost-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.primary-btn {
+  background: linear-gradient(45deg, var(--primary), var(--primary-2));
+  color: white;
+  font-weight: bold;
+}
+.ghost-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.quiz-top {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-weight: bold;
+}
+
+.answer-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.feedback {
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+}
+.feedback.ok { color: var(--ok); }
+.feedback.bad { color: var(--bad); }
+
+.stats-line {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0;
+  color: var(--muted);
+}
+
+.weak-stats ul {
+  margin: 6px 0 0;
+  padding-left: 1.1rem;
+}
+
+.hidden { display: none; }
+
+@media (min-width: 560px) {
+  .app { padding: 20px; }
+  h1 { font-size: 1.45rem; }
+  .answer-row {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
