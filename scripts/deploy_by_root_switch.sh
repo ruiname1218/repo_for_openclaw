@@ -83,6 +83,21 @@ if [[ -z "$DEPLOY_URL" ]]; then
   exit 4
 fi
 
+FULL_URL="https://${DEPLOY_URL}"
+TIME_JST=$(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M')
+COMMIT=$(git rev-parse --short HEAD)
+
+mkdir -p memory
+cat >> memory/vibe-deploy-history.md <<EOF
+
+- Date (JST): ${TIME_JST}
+- App name: ${TARGET_APP}
+- Commit: ${COMMIT}
+- Production URL: (single project root-switch mode)
+- Deployment URL: ${FULL_URL}
+- Notes: rootDirectory switched to apps/${TARGET_APP} and deployed via API.
+EOF
+
 echo "target_app=${TARGET_APP}"
 echo "rootDirectory=apps/${TARGET_APP}"
-echo "deploy_url=https://${DEPLOY_URL}"
+echo "deploy_url=${FULL_URL}"
