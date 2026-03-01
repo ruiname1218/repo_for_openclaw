@@ -1,48 +1,43 @@
 ---
 name: vibe-deploy-ops
-description: Run Vercel deployments for vibe-coding apps. Default mode is single-project deployment using `apps/vibe-app` (overwrite each release), with optional independent per-app deployment when explicitly requested.
+description: Deploy vibe-coded apps by switching a single Vercel project's rootDirectory to `apps/<target-app>` each run. Use when user asks to build an app and ship it automatically without creating new Vercel projects.
 ---
 
 # Vibe Deploy Ops
 
-## Default mode (single-project)
+## Default rule
 
-Use one Vercel project and deploy by replacing `apps/vibe-app` each time.
+Use **one Vercel project** and switch `rootDirectory` per deploy.
 
-Workflow:
-1. Build app in `apps/<app-name>`.
-2. Copy that app into `apps/vibe-app`.
-3. Commit + push to `master`.
-4. Vercel auto-deploys from `apps/vibe-app` root.
-5. Return production URL and record deployment history.
+- Target project: `repo-for-openclaw` (`prj_LCyTPl4AmYUtPFROqO6xtKS7FAIj`)
+- Deploy source: `apps/<target-app>`
+- Do not create new Vercel projects unless user explicitly asks.
 
-Helper command:
-```bash
-./scripts/deploy_single_project.sh <source-app-name> [commit-message]
-```
+## Required automation when user says "アプリを作って"
 
-## Optional mode (independent project per app)
+1. Build app in `apps/<target-app>`.
+2. Commit and push to `master`.
+3. Switch Vercel `rootDirectory` to `apps/<target-app>` via API.
+4. Trigger production deploy via API.
+5. Return deployment URL to user.
+6. Record URL/history in `memory/vibe-deploy-history.md`.
 
-Use only when user explicitly asks for independent URLs per app.
+## Command
 
 ```bash
 source .vercel.env
-./scripts/create_independent_vercel_project.sh <app-name>
+./scripts/deploy_by_root_switch.sh <target-app>
 ```
 
-## Listing
+## List known app links
 
 ```bash
-# live state/url (needs token)
 source .vercel.env
-./scripts/list_deployed_apps.sh
-
-# cached only
 ./scripts/list_deployed_apps.sh
 ```
 
-## Required conventions
+## Notes
 
-- Production branch: `master`
-- Single-project default root: `apps/vibe-app`
-- Keep deployment logs in `memory/vibe-deploy-history.md`
+- This avoids project-count limits on Vercel free plans.
+- Production URL always points to the most recently selected app.
+- Older builds remain available via Vercel deployment-history URLs.
