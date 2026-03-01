@@ -31,6 +31,32 @@ TEAM_Q=""
 if [[ -n "$TEAM_ID" ]]; then TEAM_Q="?teamId=${TEAM_ID}"; fi
 PROJECT_NAME="${APP_NAME}-$(date +%m%d%H%M)"
 
+retry_curl_json() {
+  # retry_curl_json <max_attempts> <sleep_sec> <curl args...>
+  local max_attempts="$1"; shift
+  local sleep_sec="$1"; shift
+  local attempt=1
+  local out
+  while :; do
+    out=$(curl -sS "$@" || true)
+    if [[ -n "$out" ]] && [[ "$out" != "" ]]; then
+      # Retry on common transient API errors/rate limits
+      if echo "$out" | grep -qiE '"(error|code)"\s*:\s*"?(rate_limited|too_many_requests|timeout|internal_server_error|bad_gateway|service_unavailable|gateway_timeout)"?|"status"\s*:\s*(429|500|502|503|504)'; then
+        :
+      else
+        echo "$out"
+        return 0
+      fi
+    fi
+    if (( attempt >= max_attempts )); then
+      echo "$out"
+      return 1
+    fi
+    sleep "$sleep_sec"
+    attempt=$((attempt+1))
+  done
+}
+
 # 1) Create project
 CREATE_PAYLOAD=$(cat <<JSON
 {
@@ -44,7 +70,7 @@ CREATE_PAYLOAD=$(cat <<JSON
 JSON
 )
 
-CREATE_RESP=$(curl -sS -X POST "${API_BASE}/v10/projects${TEAM_Q}" \
+CREATE_RESP=$(retry_curl_json 5 2 -X POST "${API_BASE}/v10/projects${TEAM_Q}" \
   -H "Authorization: Bearer ${VERCEL_TOKEN}" \
   -H "Content-Type: application/json" \
   -d "$CREATE_PAYLOAD")
@@ -72,7 +98,7 @@ fi
 
 # 2) Set root directory
 PATCH_PAYLOAD="{\"rootDirectory\":\"apps/${APP_NAME}\",\"framework\":null}"
-PATCH_RESP=$(curl -sS -X PATCH "${API_BASE}/v9/projects/${PROJECT_ID}${TEAM_Q}" \
+PATCH_RESP=$(retry_curl_json 5 2 -X PATCH "${API_BASE}/v9/projects/${PROJECT_ID}${TEAM_Q}" \
   -H "Authorization: Bearer ${VERCEL_TOKEN}" \
   -H "Content-Type: application/json" \
   -d "$PATCH_PAYLOAD")
@@ -106,7 +132,7 @@ DEPLOY_PAYLOAD=$(cat <<JSON
 }
 JSON
 )
-DEPLOY_RESP=$(curl -sS -X POST "${API_BASE}/v13/deployments${TEAM_Q}" \
+DEPLOY_RESP=$(retry_curl_json 6 3 -X POST "${API_BASE}/v13/deployments${TEAM_Q}" \
   -H "Authorization: Bearer ${VERCEL_TOKEN}" \
   -H "Content-Type: application/json" \
   -d "$DEPLOY_PAYLOAD")
@@ -132,7 +158,7 @@ FINAL_STATE=""
 for i in {1..40}; do
   STATUS_URL="${API_BASE}/v6/deployments?projectId=${PROJECT_ID}&limit=1"
   if [[ -n "$TEAM_ID" ]]; then STATUS_URL+="&teamId=${TEAM_ID}"; fi
-  STATUS_RESP=$(curl -sS "$STATUS_URL" -H "Authorization: Bearer ${VERCEL_TOKEN}")
+  STATUS_RESP=$(retry_curl_json 4 2 "$STATUS_URL" -H "Authorization: Bearer ${VERCEL_TOKEN}")
   PARSED=$(python3 - <<'PY' "$STATUS_RESP"
 import json,sys
 j=json.loads(sys.argv[1])
