@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Todo App</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>ToDo App</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
-    <h1>Todo</h1>
-    <form id="todo-form" class="todo-form">
-      <input id="todo-input" type="text" placeholder="やることを入力" maxlength="120" required />
+    <h1>✅ ToDo App</h1>
+    <form id="todoForm" class="input-row">
+      <input id="todoInput" type="text" placeholder="やることを入力" maxlength="120" required />
       <button type="submit">追加</button>
     </form>
 
-    <section class="toolbar">
+    <div class="toolbar">
       <button data-filter="all" class="active">すべて</button>
       <button data-filter="active">未完了</button>
       <button data-filter="done">完了</button>
-      <button id="clear-done" class="danger">完了を削除</button>
-    </section>
+      <button id="clearDone" class="danger">完了を削除</button>
+    </div>
 
-    <ul id="todo-list" class="todo-list"></ul>
-    <p id="meta" class="meta"></p>
+    <ul id="todoList"></ul>
+    <p id="empty">タスクはまだありません。</p>
   </main>
   <script src="app.js"></script>
 </body>
