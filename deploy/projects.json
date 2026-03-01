@@ -61,6 +61,48 @@
       "vercelProjectId": "prj_pXIaA4NTTQR4cw0ef6MFVJF4uy3V",
       "latestDeploymentUrl": "https://shooting-game-03011251-p2p96l8ew-rui-suzukis-projects.vercel.app",
       "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
+    },
+    "drawing-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/drawing-app",
+      "vercelProjectId": "",
+      "notes": "not independently deployed (single-project root-switch mode)"
+    },
+    "live-drawing-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/live-drawing-app",
+      "vercelProjectId": "",
+      "notes": "not independently deployed (single-project root-switch mode)"
+    },
+    "history-learning-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/history-learning-app",
+      "vercelProjectId": "",
+      "notes": "not independently deployed (single-project root-switch mode)"
+    },
+    "math-study-app": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/math-study-app",
+      "vercelProjectId": "",
+      "notes": "not independently deployed (single-project root-switch mode)"
+    },
+    "tetris-live": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/tetris-live",
+      "vercelProjectId": "",
+      "notes": "not independently deployed (single-project root-switch mode)"
+    },
+    "block-breaker-2d": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/block-breaker-2d",
+      "vercelProjectId": "",
+      "notes": "not independently deployed (single-project root-switch mode)"
     }
   },
   "mode": "single-project-default",

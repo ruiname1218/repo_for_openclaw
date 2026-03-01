@@ -1,24 +1,36 @@
 # repo_for_openclaw
 
-このリポジトリは、OpenClawで作るWebアプリをアプリ単位で独立デプロイするための構成です。
+OpenClawで作るWebアプリをまとめるリポジトリです。
+現在は **1つのVercelプロジェクトを使い回し**、`rootDirectory` を `apps/<target-app>` に切り替えてデプロイします。
 
-## Directory Layout
+## ディレクトリ構成
 
-- `apps/<app-name>/`  各Webアプリ本体
-  - `apps/vibe-app`
-  - `apps/todo-app`
-  - `apps/kakeibo-app`
-- `deploy/projects.json`  アプリ名とVercel Project IDの対応表
-- `scripts/`  デプロイ補助スクリプト
-  - `create_independent_vercel_project.sh`
-  - `vercel_fetch_latest.sh`
-  - `log_deploy.sh`
+- `apps/<app-name>/` 各アプリ本体
+- `deploy/projects.json` デプロイ設定と履歴メタ情報
+- `scripts/` デプロイ補助スクリプト
+  - `deploy_by_root_switch.sh`（デフォルト運用）
+  - `list_deployed_apps.sh`
   - `new_app_scaffold.sh`
-- `memory/vibe-deploy-history.md`  デプロイ履歴ログ
-- `skills/vibe-deploy-ops/`  この運用ルールのスキル
+  - （必要時）`create_independent_vercel_project.sh` など
+- `memory/vibe-deploy-history.md` デプロイURL履歴
+- `skills/vibe-deploy-ops/` 運用スキル
 
-## 運用ルール
+## 標準運用（デフォルト）
 
-1. 新しいアプリは必ず `apps/<app-name>` に作る
-2. アプリごとにVercelプロジェクトを分ける（独立URL）
-3. デプロイ後にURLを履歴へ記録する
+1. `apps/<target-app>` にアプリを作る
+2. `master` へpush
+3. Vercel APIで `rootDirectory=apps/<target-app>` に切り替え
+4. デプロイ実行
+5. URLを返却し、履歴に保存
+
+## よく使うコマンド
+
+```bash
+# rootDirectory切り替えデプロイ
+source .vercel.env
+./scripts/deploy_by_root_switch.sh <target-app>
+
+# 既知アプリのURL一覧
+source .vercel.env
+./scripts/list_deployed_apps.sh
+```
