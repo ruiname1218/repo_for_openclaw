@@ -4,6 +4,8 @@ const input=document.getElementById('todoInput');
 const list=document.getElementById('todoList');
 const empty=document.getElementById('empty');
 const clearDone=document.getElementById('clearDone');
+
+window.addEventListener('load', ()=> input.focus());
 const filterButtons=[...document.querySelectorAll('[data-filter]')];
 
 let items=load();
