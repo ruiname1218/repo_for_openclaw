@@ -5,7 +5,7 @@
       "branch": "master",
       "rootDirectory": "apps/vibe-app",
       "vercelProjectId": "prj_LCyTPl4AmYUtPFROqO6xtKS7FAIj",
-      "notes": "Primary app migrated from old vibe-app root folder.",
+      "notes": "Default single-project deploy target (apps/vibe-app).",
       "latestDeploymentUrl": "https://repo-for-openclaw-6oyl447gy-rui-suzukis-projects.vercel.app"
     },
     "todo-app": {
@@ -62,5 +62,7 @@
       "latestDeploymentUrl": "https://shooting-game-03011251-p2p96l8ew-rui-suzukis-projects.vercel.app",
       "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
     }
-  }
+  },
+  "mode": "single-project-default",
+  "defaultProject": "vibe-app"
 }
