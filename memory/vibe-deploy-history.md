@@ -74,3 +74,10 @@ Track each vibe-app deployment so older versions stay reachable.
 - Production URL: (project default domain)
 - Deployment URL: https://mario-like-game-03010516-fjaavdyzb-rui-suzukis-projects.vercel.app
 - Notes: Independent project created and deployed via API (state: READY).
+
+- Date (JST): 2026-03-01 12:52
+- App name: shooting-game
+- Commit: 8454414
+- Production URL: (project default domain)
+- Deployment URL: https://shooting-game-03011251-p2p96l8ew-rui-suzukis-projects.vercel.app
+- Notes: Independent project created and deployed via API (state: READY).

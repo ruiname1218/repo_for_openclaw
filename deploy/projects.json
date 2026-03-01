@@ -53,6 +53,14 @@
       "vercelProjectId": "prj_AEqYyBBZZxds2XEHD7lMg2ICDAej",
       "latestDeploymentUrl": "https://mario-like-game-03010516-fjaavdyzb-rui-suzukis-projects.vercel.app",
       "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
+    },
+    "shooting-game": {
+      "repo": "ruiname1218/repo_for_openclaw",
+      "branch": "master",
+      "rootDirectory": "apps/shooting-game",
+      "vercelProjectId": "prj_pXIaA4NTTQR4cw0ef6MFVJF4uy3V",
+      "latestDeploymentUrl": "https://shooting-game-03011251-p2p96l8ew-rui-suzukis-projects.vercel.app",
+      "notes": "Independent Vercel project managed by create_independent_vercel_project.sh"
     }
   }
 }
