@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tetris Live</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <h1>🧩 Tetris Live</h1>
+    <div class="layout">
+      <canvas id="game" width="300" height="600" aria-label="tetris"></canvas>
+      <aside class="panel">
+        <p>Score: <strong id="score">0</strong></p>
+        <p>Lines: <strong id="lines">0</strong></p>
+        <p>Level: <strong id="level">1</strong></p>
+        <div class="keys">
+          <p>← → 移動</p>
+          <p>↑ 回転 / ↓ ソフトドロップ</p>
+          <p>Space ハードドロップ</p>
+          <p>P 一時停止 / R リスタート</p>
+        </div>
+      </aside>
+    </div>
+    <div class="touch">
+      <button id="left">◀</button>
+      <button id="rot">⟳</button>
+      <button id="right">▶</button>
+      <button id="down">▼</button>
+      <button id="drop">DROP</button>
+    </div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

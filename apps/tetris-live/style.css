@@ -1,0 +1,11 @@
+*{box-sizing:border-box}
+body{margin:0;background:#0d1224;color:#e8f0ff;font-family:system-ui,-apple-system,sans-serif}
+.wrap{width:min(940px,95vw);margin:14px auto}
+h1{margin:0 0 8px}
+.layout{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+canvas{background:#070b17;border:2px solid #3f6dff;border-radius:10px;box-shadow:0 0 30px rgba(59,108,255,.25)}
+.panel{background:#121a33;border:1px solid #2f447b;border-radius:10px;padding:12px;min-width:220px}
+.keys{color:#b9c9ef;font-size:.95rem}
+.touch{display:none;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.touch button{padding:12px;border:0;border-radius:10px;background:#2d5fff;color:#fff;font-weight:800}
+@media (max-width:760px){.touch{display:grid}}
