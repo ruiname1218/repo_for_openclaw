@@ -1,187 +1,139 @@
-const canvas = document.getElementById("drawingCanvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+const linesEl = document.getElementById('lines');
+const levelEl = document.getElementById('level');
 
-const colorPicker = document.getElementById("colorPicker");
-const brushSize = document.getElementById("brushSize");
-const brushSizeValue = document.getElementById("brushSizeValue");
-const eraserBtn = document.getElementById("eraserBtn");
-const undoBtn = document.getElementById("undoBtn");
-const redoBtn = document.getElementById("redoBtn");
-const clearBtn = document.getElementById("clearBtn");
-const downloadBtn = document.getElementById("downloadBtn");
+const COLS = 10, ROWS = 20, SIZE = 30;
+const COLORS = ['#000','#5cc8ff','#ffd166','#b197fc','#7ae582','#ff6b6b','#fca311','#9ef01a'];
+const SHAPES = [
+  [],
+  [[1,1,1,1]],                 // I
+  [[2,2],[2,2]],               // O
+  [[0,3,0],[3,3,3]],           // T
+  [[0,4,4],[4,4,0]],           // S
+  [[5,5,0],[0,5,5]],           // Z
+  [[6,0,0],[6,6,6]],           // J
+  [[0,0,7],[7,7,7]],           // L
+];
 
-const MAX_HISTORY = 20;
-let drawing = false;
-let isEraser = false;
-let lastX = 0;
-let lastY = 0;
+let board, piece, nextDrop, dropInterval, score, lines, level, over, paused;
 
-const undoStack = [];
-const redoStack = [];
+function reset(){
+  board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+  score = 0; lines = 0; level = 1; over = false; paused = false;
+  dropInterval = 800; nextDrop = performance.now() + dropInterval;
+  spawn();
+  updateHUD();
+}
 
-function resizeCanvas() {
-  const ratio = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
+function randPiece(){
+  const type = 1 + (Math.random()*7|0);
+  return { x: 3, y: 0, shape: SHAPES[type].map(r=>[...r]) };
+}
 
-  const prevImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const prevWidth = canvas.width;
-  const prevHeight = canvas.height;
+function spawn(){
+  piece = randPiece();
+  if (collide(piece.x, piece.y, piece.shape)) over = true;
+}
 
-  canvas.width = Math.floor(rect.width * ratio);
-  canvas.height = Math.floor(rect.height * ratio);
+function collide(px, py, shape){
+  for(let y=0;y<shape.length;y++) for(let x=0;x<shape[y].length;x++){
+    if(!shape[y][x]) continue;
+    const nx = px + x, ny = py + y;
+    if(nx<0 || nx>=COLS || ny>=ROWS) return true;
+    if(ny>=0 && board[ny][nx]) return true;
+  }
+  return false;
+}
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(ratio, ratio);
+function merge(){
+  piece.shape.forEach((row,y)=>row.forEach((v,x)=>{ if(v) board[piece.y+y][piece.x+x]=v; }));
+}
 
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, rect.width, rect.height);
+function rotate(shape){
+  return shape[0].map((_,i)=>shape.map(row=>row[i]).reverse());
+}
 
-  if (prevWidth > 0 && prevHeight > 0) {
-    const temp = document.createElement("canvas");
-    temp.width = prevWidth;
-    temp.height = prevHeight;
-    temp.getContext("2d").putImageData(prevImage, 0, 0);
-    ctx.drawImage(temp, 0, 0, rect.width, rect.height);
+function tryMove(dx,dy){
+  if(!collide(piece.x+dx,piece.y+dy,piece.shape)){ piece.x+=dx; piece.y+=dy; return true; }
+  return false;
+}
+
+function hardDrop(){ while(tryMove(0,1)){} tickLock(); }
+
+function tickLock(){
+  merge();
+  let cleared = 0;
+  for(let y=ROWS-1;y>=0;y--){
+    if(board[y].every(v=>v)){ board.splice(y,1); board.unshift(Array(COLS).fill(0)); cleared++; y++; }
+  }
+  if(cleared){
+    lines += cleared;
+    score += [0,100,300,500,800][cleared] * level;
+    level = 1 + Math.floor(lines/10);
+    dropInterval = Math.max(90, 800 - (level-1)*65);
+  }
+  spawn();
+  updateHUD();
+}
+
+function updateHUD(){ scoreEl.textContent=score; linesEl.textContent=lines; levelEl.textContent=level; }
+
+function drawCell(x,y,v){
+  ctx.fillStyle = COLORS[v];
+  ctx.fillRect(x*SIZE,y*SIZE,SIZE,SIZE);
+  ctx.strokeStyle = '#0a1022';
+  ctx.strokeRect(x*SIZE,y*SIZE,SIZE,SIZE);
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  board.forEach((row,y)=>row.forEach((v,x)=> v && drawCell(x,y,v)));
+  if(piece){ piece.shape.forEach((row,y)=>row.forEach((v,x)=>{ if(v) drawCell(piece.x+x,piece.y+y,v); })); }
+
+  if(over || paused){
+    ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.font='bold 30px system-ui';
+    ctx.fillText(over?'GAME OVER':'PAUSED', canvas.width/2, canvas.height/2);
+    ctx.font='16px system-ui';
+    ctx.fillText(over?'Rで再スタート':'Pで再開', canvas.width/2, canvas.height/2 + 34);
   }
 }
 
-function getPoint(e) {
-  const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  return { x: clientX - rect.left, y: clientY - rect.top };
+function step(now){
+  if(!over && !paused && now >= nextDrop){
+    if(!tryMove(0,1)) tickLock();
+    nextDrop = now + dropInterval;
+  }
+  draw();
+  requestAnimationFrame(step);
 }
 
-function applyBrushStyle() {
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.lineWidth = Number(brushSize.value);
-  ctx.strokeStyle = isEraser ? "#ffffff" : colorPicker.value;
-}
-
-function pushHistory() {
-  if (undoStack.length >= MAX_HISTORY) undoStack.shift();
-  undoStack.push(canvas.toDataURL("image/png"));
-  redoStack.length = 0;
-  updateButtons();
-}
-
-function restoreFromDataUrl(dataUrl) {
-  const img = new Image();
-  img.onload = () => {
-    const rect = canvas.getBoundingClientRect();
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, rect.width, rect.height);
-    ctx.drawImage(img, 0, 0, rect.width, rect.height);
-  };
-  img.src = dataUrl;
-}
-
-function updateButtons() {
-  undoBtn.disabled = undoStack.length <= 1;
-  redoBtn.disabled = redoStack.length === 0;
-}
-
-function startDraw(e) {
-  e.preventDefault();
-  const p = getPoint(e);
-  drawing = true;
-  lastX = p.x;
-  lastY = p.y;
-  applyBrushStyle();
-}
-
-function draw(e) {
-  if (!drawing) return;
-  e.preventDefault();
-  const p = getPoint(e);
-
-  ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
-
-  lastX = p.x;
-  lastY = p.y;
-}
-
-function stopDraw(e) {
-  if (!drawing) return;
-  e.preventDefault();
-  drawing = false;
-  pushHistory();
-}
-
-brushSize.addEventListener("input", () => {
-  brushSizeValue.textContent = `${brushSize.value}px`;
-});
-
-colorPicker.addEventListener("input", () => {
-  if (isEraser) {
-    isEraser = false;
-    eraserBtn.setAttribute("aria-pressed", "false");
-    eraserBtn.textContent = "消しゴム OFF";
+addEventListener('keydown', e=>{
+  if(e.key==='r' || e.key==='R'){ reset(); return; }
+  if(over) return;
+  if(e.key==='p' || e.key==='P'){ paused=!paused; return; }
+  if(paused) return;
+  if(e.key==='ArrowLeft') tryMove(-1,0);
+  if(e.key==='ArrowRight') tryMove(1,0);
+  if(e.key==='ArrowDown'){ if(tryMove(0,1)) score += 1; updateHUD(); }
+  if(e.key===' '){ e.preventDefault(); hardDrop(); }
+  if(e.key==='ArrowUp'){
+    const r = rotate(piece.shape);
+    if(!collide(piece.x,piece.y,r)) piece.shape = r;
   }
 });
 
-eraserBtn.addEventListener("click", () => {
-  isEraser = !isEraser;
-  eraserBtn.setAttribute("aria-pressed", String(isEraser));
-  eraserBtn.textContent = isEraser ? "消しゴム ON" : "消しゴム OFF";
-});
+function bind(id, fn){
+  const b=document.getElementById(id); if(!b) return;
+  b.addEventListener('click', ()=>{ if(!over && !paused) fn(); });
+}
+bind('left', ()=>tryMove(-1,0));
+bind('right', ()=>tryMove(1,0));
+bind('down', ()=>{ if(tryMove(0,1)) {score+=1; updateHUD();} });
+bind('rot', ()=>{ const r=rotate(piece.shape); if(!collide(piece.x,piece.y,r)) piece.shape=r; });
+bind('drop', hardDrop);
 
-undoBtn.addEventListener("click", () => {
-  if (undoStack.length <= 1) return;
-  const current = undoStack.pop();
-  redoStack.push(current);
-  restoreFromDataUrl(undoStack[undoStack.length - 1]);
-  updateButtons();
-});
-
-redoBtn.addEventListener("click", () => {
-  if (redoStack.length === 0) return;
-  const next = redoStack.pop();
-  undoStack.push(next);
-  restoreFromDataUrl(next);
-  updateButtons();
-});
-
-clearBtn.addEventListener("click", () => {
-  if (!confirm("キャンバスを全消ししますか？")) return;
-  const rect = canvas.getBoundingClientRect();
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, rect.width, rect.height);
-  pushHistory();
-});
-
-downloadBtn.addEventListener("click", () => {
-  const link = document.createElement("a");
-  link.download = `drawing-${Date.now()}.png`;
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-});
-
-["mousedown", "mousemove", "mouseup", "mouseleave"].forEach((event) => {
-  canvas.addEventListener(event, (e) => {
-    if (event === "mousedown") startDraw(e);
-    if (event === "mousemove") draw(e);
-    if (event === "mouseup" || event === "mouseleave") stopDraw(e);
-  });
-});
-
-["touchstart", "touchmove", "touchend", "touchcancel"].forEach((event) => {
-  canvas.addEventListener(
-    event,
-    (e) => {
-      if (event === "touchstart") startDraw(e);
-      if (event === "touchmove") draw(e);
-      if (event === "touchend" || event === "touchcancel") stopDraw(e);
-    },
-    { passive: false }
-  );
-});
-
-window.addEventListener("resize", resizeCanvas);
-
-resizeCanvas();
-pushHistory();
+reset();
+requestAnimationFrame(step);
