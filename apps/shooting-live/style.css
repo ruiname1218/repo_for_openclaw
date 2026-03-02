@@ -1,0 +1,5 @@
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#1d2e67,#070b1b 60%);color:#eaf2ff;font-family:system-ui}
+.wrap{width:min(960px,95vw);margin:12px auto}h1{margin:0 0 8px}.hud{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;font-weight:700}
+canvas{display:block;width:100%;height:auto;background:#050912;border:2px solid #3f67ff;border-radius:12px}
+.touch{display:none;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}.touch button{padding:12px;border:0;border-radius:10px;background:#2a61ff;color:#fff;font-weight:800}
+@media (max-width:760px){.touch{display:grid}}
