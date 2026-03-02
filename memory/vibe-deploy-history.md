@@ -81,3 +81,10 @@ Track each vibe-app deployment so older versions stay reachable.
 - Production URL: (project default domain)
 - Deployment URL: https://shooting-game-03011251-p2p96l8ew-rui-suzukis-projects.vercel.app
 - Notes: Independent project created and deployed via API (state: READY).
+
+- Date (JST): 2026-03-02 22:55
+- App name: shooting-live
+- Commit: fc36799
+- Production URL: (single project root-switch mode)
+- Deployment URL: https://repo-for-openclaw-c2zhx9piy-rui-suzukis-projects.vercel.app
+- Notes: rootDirectory switched to apps/shooting-live and deployed via API.
